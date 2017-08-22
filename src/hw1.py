@@ -30,7 +30,7 @@ def input_placeholder():
 
     :return: A tensorflow placeholder of type float32 and correct shape
     """
-    return tf.placeholder(dtype=tf.float32, shape=[None, 784],
+   return tf.placeholder(dtype=tf.float32, shape=[None, 784],
                           name="image_input")
 
 def target_placeholder():
