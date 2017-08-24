@@ -34,6 +34,7 @@ def input_placeholder():
                           name="image_input")
 
 def target_placeholder():
+    
     """
     This placeholder serves as the output for the model, and will be
     populated with targets for training, and testing. Each output will
