@@ -30,11 +30,12 @@ def input_placeholder():
 
     :return: A tensorflow placeholder of type float32 and correct shape
     """
-   return tf.placeholder(dtype=tf.float32, shape=[None, 784],
+    
+
+    return tf.placeholder(dtype=tf.float32, shape=[None, 784],
                           name="image_input")
 
 def target_placeholder():
-    
     """
     This placeholder serves as the output for the model, and will be
     populated with targets for training, and testing. Each output will
@@ -48,6 +49,7 @@ def target_placeholder():
 
     :return: A tensorflow placeholder of type float32 and correct shape
     """
+    
     return tf.placeholder(dtype=tf.float32, shape=[None, 10],
                           name="image_target_onehot")
 
@@ -69,9 +71,17 @@ def onelayer(X, Y, layersize=10):
         batch_loss: The average cross-entropy loss of the batch
     """
     X = tf.placeholder(tf.float32, [None,784])
-    Y = tf.nn.softmax(tf.matmul(x,weights)+bias)
-    w = tf.variable(tf.zeros[784,10])
-    b = tf.variable(tf.zeros([10]))
+    
+    w = tf.Variable(tf.zeros([784,10]))
+    b = tf.Variable(tf.zeros([10]))
+    preds = tf.nn.softmax(tf.matmul(tf.reshape(X,[-1,784]),w)+b)
+
+    Y_ = tf.placeholder(tf.float32,[None,10])
+    batch_xentropy = -tf.reduce_sum(Y_ * tf.log(Y))
+
+    logits = tf.equal(tf.argmax(Y,1),tf.argmax(Y_,1))
+    batch_loss = tf.reduce_sum(tf.cast(logits,tf.float32))
+
     return w, b, logits, preds, batch_xentropy, batch_loss
 
 def twolayer(X, Y, hiddensize=30, outputsize=10):
