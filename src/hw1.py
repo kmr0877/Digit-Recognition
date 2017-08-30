@@ -96,7 +96,7 @@ def onelayer(X, Y, layersize=10):
     batch_loss=tf.reduce_mean(batch_xentropy)
 
 
-    return w, b, logits, preds, batch_xentropy, batch_loss
+    return w, b, logits, logits, batch_xentropy, batch_loss
 
 def twolayer(X, Y, hiddensize=30, outputsize=10):
     """
