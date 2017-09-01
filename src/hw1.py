@@ -31,8 +31,6 @@ def input_placeholder():
 
     :return: A tensorflow placeholder of type float32 and correct shape
     """
-    
-
     return tf.placeholder(dtype=tf.float32, shape=[None, 784],
                           name="image_input")
 
@@ -50,11 +48,10 @@ def target_placeholder():
 
     :return: A tensorflow placeholder of type float32 and correct shape
     """
-    
     return tf.placeholder(dtype=tf.float32, shape=[None, 10],
                           name="image_target_onehot")
 
-def onelayer(X, Y, layersize=10):
+def onelayer(X, Y, layersize=10,INPUT_SIZE=784,OUTPUT_SIZE=10):
     """
     Create a Tensorflow model for logistic regression (i.e. single layer NN)
 
@@ -89,7 +86,7 @@ def onelayer(X, Y, layersize=10):
                              name='biases')
         logits = tf.matmul(hidden, weights) + biases
 
-    preds=tf.argmax(logits,axis=1)
+    preds=tf.nn.softmax(logits)
     batch_xentropy =  tf.nn.softmax_cross_entropy_with_logits(labels=Y,
                                                   logits=logits,
                                                   name="xentropy")
@@ -97,9 +94,10 @@ def onelayer(X, Y, layersize=10):
     batch_loss=tf.reduce_mean(batch_xentropy)
 
 
+
     return w, b, logits, preds, batch_xentropy, batch_loss
 
-def twolayer(X, Y, hiddensize=30, outputsize=10):
+def twolayer(X, Y, hiddensize1=100, hiddensize2=30,INPUT_SIZE=784,OUTPUT_SIZE=10):
     """
     Create a Tensorflow model for a Neural Network with one hidden layer
 
@@ -150,11 +148,26 @@ def twolayer(X, Y, hiddensize=30, outputsize=10):
 
     batch_loss=tf.reduce_mean(batch_xentropy)
 
-
     return w1, b1, w2, b2, logits, preds, batch_xentropy, batch_loss
 
+def weight_variable(shape):
+  """weight_variable generates a weight variable of a given shape."""
+  initial = tf.truncated_normal(shape, stddev=0.1)
+  return tf.Variable(initial)
+
+
+def bias_variable(shape):
+  """bias_variable generates a bias variable of a given shape."""
+  initial = tf.constant(0.1, shape=shape)
+  return tf.Variable(initial)
+
+def conv2d(x, W,padding):
+  """conv2d returns a 2d convolution layer with full stride."""
+  return tf.nn.conv2d(x, W, strides=[1, 2, 2, 1], padding=padding)
+
+
 def convnet(X, Y, convlayer_sizes=[10, 10], \
-        filter_shape=[3, 3], outputsize=10, padding="same"):
+        filter_shape=[3, 3], outputsize=10, hidden_size=100, padding="SAME"):
     """
     Create a Tensorflow model for a Convolutional Neural Network. The network
     should be of the following structure:
@@ -179,6 +192,46 @@ def convnet(X, Y, convlayer_sizes=[10, 10], \
     will be from the conv2 layer. If you reshape the conv2 output using tf.reshape,
     you should be able to call onelayer() to get the final layer of your network
     """
+
+    with tf.name_scope('reshape'):
+        x_image = tf.reshape(X, [-1, 28, 28, 1])
+
+    with tf.name_scope('conv1'):
+        W_conv1 = weight_variable([filter_shape[0],filter_shape[1], 1, convlayer_sizes[0]])
+        b_conv1 = bias_variable([convlayer_sizes[0]])
+        conv1 = tf.nn.relu(conv2d(x_image, W_conv1,padding) + b_conv1)
+
+    with tf.name_scope('conv2'):
+        W_conv2 = weight_variable([filter_shape[0],filter_shape[1], convlayer_sizes[0], convlayer_sizes[1]])
+        b_conv2 = bias_variable([convlayer_sizes[1]])
+        conv2 = tf.nn.relu(conv2d(conv1, W_conv2,padding) + b_conv2)
+
+    conv_height = math.ceil(math.ceil(float(28) / 2.0)/2.0)
+    conv_width = math.ceil(math.ceil(float(28) / 2.0) /2.0)#stride=2
+    num_conf_features=conv_width * conv_height * convlayer_sizes[1]
+    with tf.name_scope('layer1'):
+        w = tf.Variable(tf.truncated_normal([num_conf_features, hidden_size],
+                                stddev=1.0 / math.sqrt(float(hidden_size))), name='weights')
+        b = tf.Variable(tf.zeros([hidden_size]),
+                             name='biases')
+        hidden = tf.nn.relu(tf.matmul(tf.reshape(conv2, [-1,num_conf_features]), w) + b)
+        # Linear
+    with tf.name_scope('softmax_linear'):
+        weights = tf.Variable(
+            tf.truncated_normal([hidden_size, outputsize],
+                                stddev=1.0 / math.sqrt(float(hidden_size))),
+            name='weights')
+        biases = tf.Variable(tf.zeros([outputsize]),
+                             name='biases')
+        logits = tf.matmul(hidden, weights) + biases
+
+    preds=tf.nn.softmax(logits)
+    batch_xentropy =  tf.nn.softmax_cross_entropy_with_logits(labels=Y,
+                                                  logits=logits,
+                                                  name="xentropy")
+
+    batch_loss=tf.reduce_mean(batch_xentropy)
+
     return conv1, conv2, w, b, logits, preds, batch_xentropy, batch_loss
 
 def train_step(sess, batch, X, Y, train_op, loss_op, summaries_op):
