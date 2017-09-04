@@ -102,5 +102,9 @@ you should be able to see a plot of the train and test accuracies in TensorBoard
 if you click on the histogram tab you'll also see some histograms of your weights, biases and the pre-activation inputs to the softmax in the final layer
 Make sure you are in the same directory from which train.py is running. Don't worry if you are unable to get TensorBoard working; it is not required to complete the assignment, but it can be a useful tool to monitor training, so it is probably worth your while becoming familiar with it. Click here for more information:
 
+# _Sample Interaction_
 
-Good luck! 
+Single Layer
+
+<img width="682" alt="screen shot 2017-09-04 at 4 42 09 pm" src="https://user-images.githubusercontent.com/26761582/30014545-2f5b5970-9190-11e7-80b0-0418d1a597f6.png">
+
