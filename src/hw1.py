@@ -238,7 +238,7 @@ def train_step(sess, batch, X, Y, train_op, loss_op, summaries_op):
     """
     Run one step of training.
 
-    :param sess: the current session
+   :param sess: the current session
     :param batch: holds the inputs and target outputs for the current minibatch
     batch[0] - array of shape [minibatch_size, 784] with each row holding the
     input images
