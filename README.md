@@ -108,3 +108,7 @@ Single Layer
 
 <img width="682" alt="screen shot 2017-09-04 at 4 42 09 pm" src="https://user-images.githubusercontent.com/26761582/30014545-2f5b5970-9190-11e7-80b0-0418d1a597f6.png">
 
+Two Layer Network
+
+<img width="682" alt="screen shot 2017-09-04 at 4 46 28 pm" src="https://user-images.githubusercontent.com/26761582/30014627-a1b794d4-9190-11e7-8235-2c5bb9caf7c8.png">
+
