@@ -112,3 +112,6 @@ Two Layer Network
 
 <img width="682" alt="screen shot 2017-09-04 at 4 46 28 pm" src="https://user-images.githubusercontent.com/26761582/30014627-a1b794d4-9190-11e7-8235-2c5bb9caf7c8.png">
 
+Conv Layer
+
+<img width="682" alt="screen shot 2017-09-04 at 4 57 21 pm" src="https://user-images.githubusercontent.com/26761582/30015429-0835feb4-9194-11e7-9060-05f7d04e650b.png">
